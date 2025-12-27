@@ -46,11 +46,8 @@ Resultado:
 conda 24.x.x
 ```
 Qué significa esto
-- Verifica que Conda esté instalado
-- Verifica que esté en el PATH
-
-
-
+- Verificar que Conda esté instalado
+- Verificar que esté en el PATH
 
 #### 1.2. Crear el entorno y activar entorno
 
@@ -68,7 +65,6 @@ Se pueden verificas los entornos con
 conda env list
 ```
 o
-
 ```
 conda info --envs
 ```
@@ -95,11 +91,11 @@ El prompt cambiara a:
 
 ### PASO 2. Instalar dependencias (CONCEPTO + PRÁCTICA)
 
-Antes de ejecutar comandos, necesitas entender qué estás haciendo y por qué.
+Antes de ejecutar comandos, necesitamos entender qué estamos haciendo y por qué.
 
 #### 2.1. ¿Qué son las dependencias?
 
-Las dependencias son librerías externas que tu proyecto necesita para funcionar.
+Las dependencias son librerías externas que el proyecto necesita para funcionar.
 
 | Librería     | Para qué sirve              |
 | ------------ | --------------------------- |
@@ -112,7 +108,7 @@ Las dependencias son librerías externas que tu proyecto necesita para funcionar
 
 #### Instalar dependencias y verificar la instalación
 
-Con el entorno activo (projectfastapi), ejecuta:
+Con el entorno activo (projectfastapi), ejecutamos:
 
 ```
 pip install fastapi uvicorn scikit-learn pandas numpy joblib
@@ -133,7 +129,7 @@ OK
 
 Este paso es conceptual y práctico a la vez.
 
-Aquí entiendes qué es una API y cómo FastAPI la crea.
+Aquí entendemos qué es una API y cómo FastAPI la crea.
 
 #### 3.1. ¿Qué es una API?
 
@@ -170,8 +166,6 @@ Ejemplo mental:
 POST /predict → ejecuta predict()
 ```
 
-
-
 #### 3.4. Crear la estructura mínima del proyecto
 
 Dentro de tu proyecto, crea una carpeta: `FastAPI/`
@@ -180,8 +174,7 @@ Dentro de esa carpeta crea un archivo: `main.py`
 
 #### 3.5 Código mínimo de FastAPI
 
-Abre `main.py` y escribe exactamente esto:
-
+Abrir `main.py` y escribimos exactamente esto:
 
 ```
 from fastapi import FastAPI
@@ -233,7 +226,7 @@ Por eso todo se escribe como:
 @app.get("/")
 @app.post("/predict")
 ```
-Porque le estás diciendo a esa aplicación qué rutas tiene.
+Porque le estamos diciendo a esa aplicación qué rutas tiene.
 
 En este punto es importante tener en cuenta el entorno en que se ejecuta `main.py`
 Para verificar esto `ctrl + shift + p` -> `Phyton:Select Interpreter` -> Selecionar el interprete del entorno
@@ -255,7 +248,7 @@ uvicorn main:app --reload
 
 Cuando se ejecuta:` uvicorn main:app`
 
-le estás diciendo a Uvicorn dos cosas exactas:
+le estamos diciendo a Uvicorn dos cosas exactas:
 
 `main` es el archivo `main.py`, sin la extensión `.py`
 
@@ -269,7 +262,7 @@ Uvicorn traduce esto como: “Importa `main.py` y busca una variable llamada app
 
 #### 3.7. Probar que funciona
 
-Abre el navegador y ve a:
+Abre el navegador e ir a:
 ```
 http://127.0.0.1:8000
 ```
@@ -321,13 +314,13 @@ FastAPI usa `Pydantic`, una librería de validación.
 
 **Concepto clave**
 
-No recibes JSON “crudo”, recibes objetos validados.
+No recibimos JSON “crudo”, recibimos objetos validados.
 
-Para eso defines un modelo de entrada.
+Para eso definimos un modelo de entrada.
 
 #### 4.2 Crear el modelo de entrada (`Pydantic`)
 
-En `main.py`, agrega debajo de los imports:
+En `main.py`, agregar debajo de los imports:
 ```
 from pydantic import BaseModel
 ```
@@ -336,9 +329,6 @@ Ahora define el modelo:
 class TextInput(BaseModel):
     text: str
 ```
-
-
-
 
 Qué significa esto:
 - TextInput describe el formato del request
@@ -354,7 +344,7 @@ FastAPI usa esto para:
 
 #### 4.4. Crear el endpoint POST /predict
 
-Debajo del endpoint /, agrega:
+Debajo del endpoint /, agregar:
 
 ```
 @app.post("/predict")
@@ -371,9 +361,6 @@ Qué está pasando aquí
 | data.text             | Accedes al valor enviado               |
 | return {...}          | Respuesta JSON                         |
 
-
-
-
 FastAPI:
 - recibe JSON
 - lo convierte a TextInput
@@ -388,13 +375,9 @@ Probar en Swagger:
 http://127.0.0.1:8000/docs
 ```
 
-
-
-
-
 ### PASO 5. Lógica de negocio: análisis de sentimiento (concepto + práctica)
 
-Ahora tu API ya recibe datos.
+Ahora la API ya recibe datos.
 
 El siguiente paso es que haga algo con ellos.
 
@@ -436,12 +419,9 @@ Positivas: bueno, excelente, feliz, genial
 Negativas: malo, terrible, horrible, triste
 ```
 
-
-
-
 #### 5.4. Implementar la lógica
 
-Debajo de tus endpoints, agrega esta función:
+Debajo de tus endpoints, agregamos esta función:
 
 ```
 def analyze_sentiment(text: str):
@@ -460,8 +440,6 @@ def analyze_sentiment(text: str):
 
     return "neutro", 0.5
 ```
-
-
 
 Concepto importante
 
@@ -508,9 +486,6 @@ Caso neutro
   "text": "El producto llegó ayer"
 }
 ```
-
-
-
 
 #### 5.8. Cómo se ve esto desde backend Java
 
