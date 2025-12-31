@@ -1,34 +1,45 @@
+from enum import Enum
 from fastapi import FastAPI
-from pydantic import BaseModel #librería de validación de datos y gestión de esquemas
+from pydantic import BaseModel, Field#librería de validación de datos y gestión de esquemas
 
 # FastAPI usa esto para: -validar el request-generar Swagger-evitar errores
 class TextInput(BaseModel):
-    text: str
+    # text: str
+    text: str = Field(...,min_length=1, description="Texto a analizar")
 
-app = FastAPI()                                 #Crea la aplicación web
+class Prevision(str, Enum):
+    POSITIVO = "POSITIVO"
+    NEGATIVO = "NEGATIVO"
+    NEUTRO = "NEUTRO"
+
+class PredictResponse(BaseModel):
+    prevision: Prevision
+    probabilidad: float = Field(..., ge=0.0, le=1.0)
+
+
+#Crea la aplicación web
+app = FastAPI(
+    title="Sentiment DS API",
+    version="1.0.0",
+    description="Microservicio DS (mock) para análisis de sentimiento. Contrato estable para BE."
+)                                 
+
+
+
 
 @app.get("/")                                   #Define un endpoint GET
 def root():                                     #Función que se ejecuta
     return {"message": "API funcionando"}       #Respuesta JSON
 
-#Crear el endpoint POST /predict
-'''
-@app.post("/predict")                   #Define un endpoint POST
-def predict(data: TextInput):           #FastAPI convierte el JSON en un objeto
-    return {
-        "received_text": data.text      #Accedes al valor enviado
-    }                                   #Respuesta JSON
-'''
-#Crear el endpoint POST /predict + modifica tu endpoint /predict + simula el comportamiento de un modelo ML
-@app.post("/predict")
-def predict(data: TextInput):
-    sentiment, score = analyze_sentiment(data.text)
+@app.get("/health")
+def health():
+    return {"status": "OK"}
 
-    return {
-        "prevision": sentiment,
-        "probabilidad": score,
-        #"text": data.text
-    }
+#Crear el endpoint POST /predict + modifica tu endpoint /predict + simula el comportamiento de un modelo ML
+@app.post("/predict", response_model=PredictResponse)
+def predict(data: TextInput):
+    prevision, score = analyze_sentiment(data.text)
+    return {"prevision": prevision, "probabilidad": score}
 
 #simula el comportamiento de un modelo ML
 #Esta función:-no sabe nada de FastAPI-podría vivir en otro archivo-simula el comportamiento de un modelo ML
@@ -40,10 +51,10 @@ def analyze_sentiment(text: str):
 
     for word in positive_words:
         if word in text_lower:
-            return "positivo", 0.9
+            return Prevision.POSITIVO, 0.9
 
     for word in negative_words:
         if word in text_lower:
-            return "negativo", 0.9
+            return Prevision.NEGATIVO, 0.9
 
-    return "neutro", 0.5
+    return Prevision.NEUTRO, 0.5
