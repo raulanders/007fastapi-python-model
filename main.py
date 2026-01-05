@@ -1,6 +1,9 @@
 from enum import Enum
 from fastapi import FastAPI
 from pydantic import BaseModel, Field#librería de validación de datos y gestión de esquemas
+import joblib
+
+pipeline = joblib.load("models/sentiment_pipeline.joblib") #Cargar el pepeline real
 
 # FastAPI usa esto para: -validar el request-generar Swagger-evitar errores
 class TextInput(BaseModel):
@@ -41,20 +44,19 @@ def predict(data: TextInput):
     prevision, score = analyze_sentiment(data.text)
     return {"prevision": prevision, "probabilidad": score}
 
-#simula el comportamiento de un modelo ML
-#Esta función:-no sabe nada de FastAPI-podría vivir en otro archivo-simula el comportamiento de un modelo ML
+# Reemplazo correcto de analyze_sentiment
 def analyze_sentiment(text: str):
-    positive_words = ["bueno", "excelente", "feliz", "genial"]
-    negative_words = ["malo", "terrible", "horrible", "triste"]
+    # Predicción del modelo
+    prediction = pipeline.predict([text])[0]              #Use pipeline.predict
+    probabilities = pipeline.predict_proba([text])[0]     #Use pipeline.predict_proba
+    confidence = float(max(probabilities))
 
-    text_lower = text.lower()
+    # Normalizar salida al Enum
+    prediction = prediction.upper()
 
-    for word in positive_words:
-        if word in text_lower:
-            return Prevision.POSITIVO, 0.9
-
-    for word in negative_words:
-        if word in text_lower:
-            return Prevision.NEGATIVO, 0.9
-
-    return Prevision.NEUTRO, 0.5
+    if prediction == "POSITIVO":
+        return Prevision.POSITIVO, confidence
+    elif prediction == "NEGATIVO":
+        return Prevision.NEGATIVO, confidence
+    else:
+        return Prevision.NEUTRO, confidence
