@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel, Field#librería de validación de datos y gestión de esquemas
 import joblib
 
-pipeline = joblib.load("models/sentiment_pipeline.joblib") #Cargar el pepeline real
+pipeline = joblib.load("models/sentiment_pipeline_es.joblib") #Cargar el pepeline real
 
 # FastAPI usa esto para: -validar el request-generar Swagger-evitar errores
 class TextInput(BaseModel):
