@@ -1,4 +1,6 @@
-﻿fastapi>=0.110
-uvicorn[standard]>=0.27
+﻿fastapi
+uvicorn[standard]
+pydantic
 joblib
-scikit-learn
+langdetect==1.0.9
+scikit-learn==1.6.1
