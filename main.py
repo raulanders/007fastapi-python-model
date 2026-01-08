@@ -195,4 +195,4 @@ def analyze_sentiment(text: str):
     elif prediction == "NEGATIVO":
         return Prevision.NEGATIVO, confidence
     else:
-        return Prevision.NEUTRO, confidence, confidence
+        return Prevision.NEUTRO, confidence
