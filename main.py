@@ -79,4 +79,5 @@ def analyze_sentiment(text: str):
         return Prevision.POSITIVO, confidence
     if prediction == "NEGATIVO":
         return Prevision.NEGATIVO, confidence
-    return Prevision.NEUTRO, confidence
+    else:
+        return Prevision.NEUTRO, confidence
