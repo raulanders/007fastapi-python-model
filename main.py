@@ -32,16 +32,27 @@ app = FastAPI(
 
 @app.get("/")
 def root():
+    """
+    Endpoint raíz para verificar que la API está en línea.
+    """
     return {"message": "API funcionando"}
 
 
 @app.get("/health")
 def health():
+    """
+    Endpoint de salud utilizado por el BackEnd para verificar disponibilidad.
+    Retorna 200 OK si el servicio está activo.
+    """
     return {"status": "OK"}
 
 
 @app.post("/predict", response_model=PredictResponse)
 def predict(data: TextInput):
+    """
+    Endpoint principal de predicción.
+    Recibe un texto, detecta el idioma (ES/PT) y retorna el sentimiento y la probabilidad.
+    """
     prevision, score = analyze_sentiment(data.text)
     return {"prevision": prevision, "probabilidad": score}
 
